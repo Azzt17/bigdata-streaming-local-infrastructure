@@ -24,7 +24,7 @@ services:
     image: bde2020/spark-master:3.0.0-hadoop3.2
     container_name: spark-master
     ports:
-      - "8080:8080"
+      - "8081:8080"
       - "7077:7077"
     environment:
       - INIT_DAEMON_STEP=setup_spark
