@@ -55,7 +55,7 @@
                       },
                       "pluginVersion": "4.17.0",
                       "queryType": "timeseries",
-                      "rawSql": "SELECT\n    toStartOfHour(event_time) AS time,\n    concat('value ', device_id) AS metric,\n    avg(temperature) AS value\nFROM bigdata.sensor_readings\nWHERE device_id IN (${device_id:singlequote})\n  AND $__timeFilter(event_time)\nGROUP BY time, device_id\nORDER BY time"
+                      "rawSql": "SELECT\n    toStartOfHour(event_time) AS time,\n    device_id AS metric,\n    avg(temperature) AS value\nFROM bigdata.sensor_readings\nWHERE device_id IN (${device_id:singlequote})\n  AND $__timeFilter(event_time)\nGROUP BY time, device_id\nORDER BY time"
                     },
                     "version": "v0"
                   },
@@ -229,8 +229,7 @@
                       "value": 80
                     }
                   ]
-                },
-                "unit": "celsius"
+                }
               },
               "overrides": []
             },
@@ -281,7 +280,7 @@
                       },
                       "pluginVersion": "4.17.0",
                       "queryType": "timeseries",
-                      "rawSql": "SELECT\n    time,\n    metric,\n    value\nFROM\n(\n    SELECT\n        predict_time AS time,\n        concat('value ', model_name) AS metric,\n        predicted AS value\n    FROM bigdata.predictions\n    WHERE device_id IN (${device_id:singlequote})\n      AND model_name IN (${model_name:singlequote})\n      AND $__timeFilter(predict_time)\n\n    UNION ALL\n\n    SELECT\n        predict_time AS time,\n        'value actual' AS metric,\n        actual AS value\n    FROM bigdata.predictions\n    WHERE device_id IN (${device_id:singlequote})\n      AND model_name IN (${model_name:singlequote})\n      AND $__timeFilter(predict_time)\n)\nORDER BY time ASC"
+                      "rawSql": "SELECT\n    time,\n    metric,\n    value\nFROM\n(\n    SELECT\n        predict_time AS time,\n        model_name AS metric,\n        predicted AS value\n    FROM bigdata.predictions\n    WHERE device_id IN (${device_id:singlequote})\n      AND model_name IN (${model_name:singlequote})\n      AND $__timeFilter(predict_time)\n\n    UNION ALL\n\n    SELECT\n        predict_time AS time,\n        'actual' AS metric,\n        any(actual) AS value\n    FROM bigdata.predictions\n    WHERE device_id IN (${device_id:singlequote})\n      AND $__timeFilter(predict_time)\n    GROUP BY predict_time\n)\nORDER BY time ASC"
                     },
                     "version": "v0"
                   },
@@ -440,7 +439,7 @@
                       },
                       "pluginVersion": "4.17.0",
                       "queryType": "table",
-                      "rawSql": "SELECT\n    model_name,\n    count() AS total_rows,\n    round(avg(absolute_error), 4) AS mae_proxy,\n    round(sqrt(avg(pow(absolute_error, 2))), 4) AS rmse_proxy\nFROM bigdata.forecasts\nGROUP BY model_name\nORDER BY mae_proxy ASC"
+                      "rawSql": "SELECT\n    model_name,\n    count() AS total_rows,\n    round(avg(absolute_error), 4) AS mae,\n    round(sqrt(avg(pow(absolute_error, 2))), 4) AS rmse\nFROM bigdata.forecasts\nGROUP BY model_name\nORDER BY mae ASC"
                     },
                     "version": "v0"
                   },
@@ -457,13 +456,23 @@
         "links": [],
         "title": "Panel 4: Model Error Summary",
         "vizConfig": {
-          "group": "bargauge",
+          "group": "table",
           "kind": "VizConfig",
           "spec": {
             "fieldConfig": {
               "defaults": {
                 "color": {
                   "mode": "thresholds"
+                },
+                "custom": {
+                  "align": "auto",
+                  "cellOptions": {
+                    "type": "auto"
+                  },
+                  "footer": {
+                    "reducers": []
+                  },
+                  "inspect": false
                 },
                 "thresholds": {
                   "mode": "absolute",
@@ -482,26 +491,8 @@
               "overrides": []
             },
             "options": {
-              "displayMode": "gradient",
-              "legend": {
-                "calcs": [],
-                "displayMode": "list",
-                "placement": "bottom",
-                "showLegend": false
-              },
-              "maxVizHeight": 300,
-              "minVizHeight": 16,
-              "minVizWidth": 8,
-              "namePlacement": "auto",
-              "orientation": "auto",
-              "reduceOptions": {
-                "calcs": ["lastNotNull"],
-                "fields": "",
-                "values": false
-              },
-              "showUnfilled": true,
-              "sizing": "auto",
-              "valueMode": "color"
+              "cellHeight": "sm",
+              "showHeader": true
             }
           },
           "version": "13.0.1+security-01"
