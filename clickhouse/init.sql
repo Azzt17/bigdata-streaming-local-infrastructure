@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS bigdata.sensor_readings
 ENGINE = MergeTree()
 PARTITION BY toYYYYMM(event_time)
 ORDER BY (device_id, event_time)
-TTL event_time + INTERVAL 2 YEAR DELETE
 SETTINGS index_granularity = 8192;
 
 CREATE TABLE IF NOT EXISTS bigdata.sensor_kafka
