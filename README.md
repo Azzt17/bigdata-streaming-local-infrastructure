@@ -65,17 +65,17 @@ For more detail, see:
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Streaming ingestion | Apache Kafka |
-| OLAP storage | ClickHouse |
+| Layer                         | Technology                                  |
+| ----------------------------- | ------------------------------------------- |
+| Streaming ingestion           | Apache Kafka                                |
+| OLAP storage                  | ClickHouse                                  |
 | Stream-to-storage integration | ClickHouse Kafka Engine + Materialized View |
-| Processing | Apache Spark / PySpark |
-| Batch ingestion | Python + Pandas + ClickHouse Connect |
-| Forecasting | ARIMA, LSTM |
-| Visualization | Grafana, Streamlit |
-| Infrastructure | Docker Compose |
-| Local runtime | Python 3.11, Java 17 |
+| Processing                    | Apache Spark / PySpark                      |
+| Batch ingestion               | Python + Pandas + ClickHouse Connect        |
+| Forecasting                   | ARIMA, LSTM                                 |
+| Visualization                 | Grafana, Streamlit                          |
+| Infrastructure                | Docker Compose                              |
+| Local runtime                 | Python 3.11, Java 17                        |
 
 ## Main Features
 
@@ -266,7 +266,7 @@ Java 17 helper script is included for PySpark
 ### 1. Clone Repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/Azzt17/bigdata-streaming-local-infrastructure/
 cd bigdata-streaming-local-lab
 ```
 
