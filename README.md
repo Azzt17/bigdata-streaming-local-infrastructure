@@ -173,8 +173,6 @@ Forecast vs actual chart
 
 ## Screenshots
 
-> Update the paths below if your screenshot filenames are different.
-
 ### Grafana Dashboard
 
 ![Grafana Dashboard](docs/images/grafana-dashboard.png)
