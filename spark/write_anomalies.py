@@ -28,27 +28,40 @@ def main() -> None:
     reset_anomalies_table()
 
     spark = (
-        SparkSession.builder
-        .appName("BigData_ClickHouse_Write_Anomalies")
+        SparkSession.builder.appName("BigData_ClickHouse_Write_Anomalies")
         .master("local[*]")
         .config("spark.jars", "jars/clickhouse-jdbc.jar")
+        .config("spark.sql.session.timeZone", "UTC")
         .getOrCreate()
     )
 
     spark.sparkContext.setLogLevel("WARN")
 
-    df = spark.read.jdbc(
-        url=CH_URL,
-        table="(SELECT * FROM sensor_readings) AS sensor_readings",
-        properties=CH_OPTS,
+    df = (
+        spark.read.jdbc(
+            url=CH_URL,
+            table="""
+        (
+            SELECT
+                formatDateTime(event_time, '%Y-%m-%d %H:%i:%S') AS event_time_str,
+                device_id,
+                temperature,
+                humidity,
+                pressure
+            FROM sensor_readings
+        ) AS sensor_readings
+        """,
+            properties=CH_OPTS,
+        )
+        .withColumn(
+            "event_time", F.to_timestamp("event_time_str", "yyyy-MM-dd HH:mm:ss")
+        )
+        .drop("event_time_str")
     )
 
-    stats = (
-        df.groupBy("device_id")
-        .agg(
-            F.mean("temperature").alias("mean_temp"),
-            F.stddev("temperature").alias("std_temp"),
-        )
+    stats = df.groupBy("device_id").agg(
+        F.mean("temperature").alias("mean_temp"),
+        F.stddev("temperature").alias("std_temp"),
     )
 
     anomalies = (
