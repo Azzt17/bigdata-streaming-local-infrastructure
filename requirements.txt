@@ -1,0 +1,11 @@
+tensorflow
+kafka-python
+clickhouse-connect
+pyspark==3.5.0
+statsmodels
+scikit-learn
+pandas
+numpy
+matplotlib
+streamlit
+plotly

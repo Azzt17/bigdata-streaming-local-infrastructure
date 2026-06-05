@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environment
+venv/
+.venv/
+venv_bigdata/
+
+# Environment / secrets
+.env
+*.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Spark / Hadoop output
+spark-warehouse/
+metastore_db/
+derby.log
+output/
+*.parquet/
+*.crc
+_SUCCESS
+
+# Docker / local volumes
+clickhouse-data/
+grafana-data/
+data/clickhouse/
+data/grafana/
+data/hadoop/
+data/spark/
+
+# Datasets
+data/raw/*
+!data/raw/.gitkeep
+data/large/*
+!data/large/.gitkeep
+
+# Logs
+logs/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+EOF
